@@ -1,0 +1,88 @@
+# Copy to config/settings.yaml (`jobagent init` does this) and edit.
+# Nothing in this file is personal, so it's safe to commit.
+
+search:
+  # Which kinds of roles to keep: swe, ml_data, pm, quant, hardware
+  roles: [swe, ml_data, pm]
+  # intern, newgrad (unknown = the source didn't say; usually fine to keep)
+  levels: [intern, newgrad, unknown]
+  # Only keep jobs posted within this many days (0 = no limit)
+  max_age_days: 21
+  # Substring match against the job's locations (case-insensitive). Empty = anywhere.
+  # Jobs listing "Remote" always pass if include_remote is true.
+  locations: []          # e.g. ["CA", "San Francisco", "Seattle", "New York", "NYC"]
+  include_remote: true
+  countries_exclude: ["Canada", "UK", "India", "Germany", "Singapore"]   # drop non-US lists' rows
+  # Set true if you will need visa sponsorship now or later: drops jobs that say
+  # "Does Not Offer Sponsorship" or "U.S. Citizenship is Required".
+  needs_sponsorship: false
+  # Drop postings that require a Master's/PhD/MBA
+  skip_advanced_degree_only: false
+  # Remove "phd" if you're a PhD student.
+  exclude_title_keywords: ["senior", "staff", "principal", "clearance", "phd", "secret"]
+  exclude_companies: []
+  # Companies you most want - they float to the top of the queue.
+  dream_companies: ["Google", "Meta", "Stripe", "Figma", "Databricks", "Anthropic", "Notion"]
+
+# Where jobs come from. All are public and free. Disable any with `enabled: false`.
+# Repo names roll over every season (e.g. Summer2027 -> Summer2028) - bump the year here.
+sources:
+  - name: simplify-internships
+    type: simplify_json
+    level: intern
+    url: https://raw.githubusercontent.com/SimplifyJobs/Summer2027-Internships/dev/.github/scripts/listings.json
+  - name: simplify-newgrad
+    type: simplify_json
+    level: newgrad
+    url: https://raw.githubusercontent.com/SimplifyJobs/New-Grad-Positions/dev/.github/scripts/listings.json
+  - name: speedyapply-swe
+    type: markdown
+    url: https://raw.githubusercontent.com/speedyapply/2027-SWE-College-Jobs/main/README.md
+  - name: speedyapply-ai
+    type: markdown
+    url: https://raw.githubusercontent.com/speedyapply/2027-AI-College-Jobs/main/README.md
+  - name: jobright-swe-newgrad
+    type: markdown
+    level: newgrad
+    url: https://raw.githubusercontent.com/jobright-ai/2026-Software-Engineer-New-Grad/master/README.md
+  - name: jobright-pm-newgrad
+    type: markdown
+    level: newgrad
+    url: https://raw.githubusercontent.com/jobright-ai/2026-Product-Management-New-Grad/master/README.md
+  - name: jobright-swe-intern
+    type: markdown
+    level: intern
+    url: https://raw.githubusercontent.com/jobright-ai/2026-Software-Engineer-Internship/master/README.md
+  - name: jobright-pm-intern
+    type: markdown
+    level: intern
+    url: https://raw.githubusercontent.com/jobright-ai/2026-Product-Management-Internship/master/README.md
+  - name: jobright-data-newgrad
+    type: markdown
+    level: newgrad
+    url: https://raw.githubusercontent.com/jobright-ai/2026-Data-Analysis-New-Grad/master/README.md
+
+# Poll these companies' own job boards directly (catches roles hours before lists do).
+# token = the slug in their careers URL, e.g. boards.greenhouse.io/<token>,
+# jobs.lever.co/<token>, jobs.ashbyhq.com/<token>
+watch_companies:
+  - {ats: greenhouse, token: figma, name: Figma}
+  - {ats: greenhouse, token: stripe, name: Stripe}
+  - {ats: greenhouse, token: databricks, name: Databricks}
+  - {ats: ashby, token: notion, name: Notion}
+
+apply:
+  # Browser channel: "chrome" uses your installed Google Chrome; "" uses bundled Chromium
+  browser_channel: chrome
+  # Saves a screenshot of every filled form to data/screenshots before you submit
+  screenshot_before_submit: true
+  # Never auto-tick "I agree"/"I certify" boxes - you read and tick those yourself.
+  leave_consent_boxes_for_me: true
+
+# Optional: let Claude draft answers to free-text questions ("Why this company?")
+# and pick options for questions the rules don't recognize. Needs ANTHROPIC_API_KEY
+# in your environment. Drafts are highlighted yellow so you always review them.
+llm:
+  enabled: false
+  model: claude-sonnet-5-5
+  draft_cover_letters: false

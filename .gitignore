@@ -1,0 +1,15 @@
+# Your personal details and resumes never leave your machine
+config/profile.yaml
+resumes/*
+!resumes/README.md
+data/
+applications.csv
+digest.md
+
+__pycache__/
+*.pyc
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+.DS_Store

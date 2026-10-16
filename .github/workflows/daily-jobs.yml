@@ -1,0 +1,34 @@
+# Every morning, pull all sources and open a GitHub issue listing NEW roles that match
+# config/settings.yaml (or the example). You get a notification/email from GitHub -
+# no need to keep your laptop on. Applying still happens locally with `jobagent apply`.
+name: daily new-jobs digest
+on:
+  schedule:
+    - cron: "0 15 * * *"      # 8am Pacific
+  workflow_dispatch:
+permissions:
+  contents: read
+  issues: write
+jobs:
+  digest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install -e .
+      - name: Restore list of jobs already seen
+        uses: actions/cache@v4
+        with:
+          path: data/jobs.db
+          key: jobs-db-${{ github.run_id }}
+          restore-keys: jobs-db-
+      - run: jobagent fetch --digest digest.md
+      - name: Open an issue if there's anything new
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if grep -q "^| " digest.md && [ "$(grep -c '^| ' digest.md)" -gt 2 ]; then
+            gh issue create --title "New roles - $(date +'%b %d')" --body-file digest.md --label jobs || \
+            gh issue create --title "New roles - $(date +'%b %d')" --body-file digest.md
+          fi

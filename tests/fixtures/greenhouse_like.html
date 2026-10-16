@@ -1,0 +1,46 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Apply - Software Engineer, New Grad</title>
+<style>.vh{position:absolute;opacity:0;width:1px;height:1px}</style></head>
+<body>
+<h1>Software Engineer, New Grad</h1>
+<form id="application_form" onsubmit="window.__submitted = true; return false;">
+  <div class="field"><label for="first_name">First Name <span>*</span></label><input id="first_name" name="first_name" required></div>
+  <div class="field"><label for="last_name">Last Name *</label><input id="last_name" name="last_name" required></div>
+  <div class="field"><label for="email">Email *</label><input id="email" type="email" required></div>
+  <div class="field"><label for="phone">Phone</label><input id="phone" type="tel"></div>
+  <div class="field"><label for="resume">Resume/CV *</label><input id="resume" type="file" accept=".pdf,.doc,.docx" required></div>
+  <div class="field"><label for="cover">Cover Letter</label><input id="cover" type="file"></div>
+  <div class="field"><label for="li">LinkedIn Profile</label><input id="li" name="urls[LinkedIn]"></div>
+  <div class="field"><label for="gh">GitHub</label><input id="gh"></div>
+  <div class="field"><label for="school">School *</label>
+    <select id="school" required><option value="">Select...</option><option>Stanford University</option><option>University of San Francisco</option></select></div>
+  <div class="field"><label for="degree">Degree</label>
+    <select id="degree"><option>--</option><option>Bachelor's Degree</option><option>Master's Degree</option><option>Doctorate</option></select></div>
+  <div class="field"><label for="grad">Expected graduation date from your university</label><input id="grad"></div>
+  <div class="field"><label for="auth">Are you legally authorized to work in the United States? *</label>
+    <select id="auth" required><option value="">Select...</option><option>Yes</option><option>No</option></select></div>
+  <div class="field"><label for="spons">Will you now or in the future require sponsorship for employment visa status (e.g. H-1B)? *</label>
+    <select id="spons" required><option value="">Select...</option><option>Yes</option><option>No</option></select></div>
+  <div class="field"><label for="why">Why do you want to work at Acme? *</label><textarea id="why" required></textarea></div>
+  <div class="field"><label for="hear">How did you hear about this job?</label><input id="hear"></div>
+  <div class="field"><label for="state">State</label>
+    <select id="state"><option></option><option>California</option><option>New York</option></select></div>
+
+  <fieldset><legend>Are you open to relocation?</legend>
+    <label><input type="radio" name="reloc" value="1" class="vh"> Yes</label>
+    <label><input type="radio" name="reloc" value="0" class="vh"> No</label>
+  </fieldset>
+
+  <h3>Voluntary Self-Identification</h3>
+  <div class="field"><label for="gender">Gender</label>
+    <select id="gender"><option>Please select</option><option>Male</option><option>Female</option><option>Decline To Self Identify</option></select></div>
+  <div class="field"><label for="vet">Veteran Status</label>
+    <select id="vet"><option>Please select</option><option>I am a veteran</option><option>I am not a protected veteran</option><option>I don't wish to answer</option></select></div>
+  <div class="field"><label for="dis">Disability Status</label>
+    <select id="dis"><option>Please select</option><option>Yes, I have a disability</option><option>No, I do not have a disability</option><option>I do not want to answer</option></select></div>
+
+  <div class="field"><label><input type="checkbox" id="agree" required> I certify that the information above is accurate *</label></div>
+  <div class="field"><label for="fav">Favorite programming paradigm</label><input id="fav"></div>
+  <button type="submit" id="submit_app">Submit Application</button>
+</form>
+</body></html>

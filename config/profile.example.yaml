@@ -1,0 +1,63 @@
+# Copy to config/profile.yaml (`jobagent init` does this) and fill in.
+# config/profile.yaml is git-ignored - your details never get pushed to GitHub.
+
+personal:
+  first_name: Jane
+  last_name: Doe
+  preferred_name: ""
+  pronouns: ""
+  email: you@example.com
+  phone: ""
+  address: ""
+  city: San Francisco
+  state: CA
+  zip: ""
+  country: United States
+  linkedin: https://www.linkedin.com/in/your-handle
+  github: https://github.com/your-handle
+  portfolio: ""
+
+education:
+  school: Your University
+  degree: Master's            # e.g. Bachelor's / Master's
+  major: Computer Science
+  gpa: ""
+  start_date: ""              # e.g. 08/2025
+  graduation_date: ""         # e.g. 05/2027
+  graduation_year: ""         # e.g. 2027
+
+work:
+  current_company: ""
+  current_title: ""
+  years_experience: "0"
+  # Answer these honestly - they are the questions that get applications auto-rejected.
+  authorized_to_work_us: "Yes"
+  needs_sponsorship_now_or_future: "No"
+  willing_to_relocate: "Yes"
+  earliest_start_date: ""     # e.g. 05/2027
+  desired_salary: ""          # leave blank to fill it yourself per job
+  how_did_you_hear: "Online job board"
+
+# Voluntary self-identification (EEO). Leave as-is to decline on every form.
+eeo:
+  gender: "Decline to self-identify"
+  race: "Decline to self-identify"
+  hispanic_latino: "Decline to self-identify"
+  veteran: "I am not a protected veteran"
+  disability: "I do not want to answer"
+
+# Put PDFs in resumes/. The agent picks one by role category; `default` is the fallback.
+resumes:
+  default: resumes/resume.pdf
+  swe: resumes/resume_swe.pdf
+  ml_data: resumes/resume_ml.pdf
+  pm: resumes/resume_pm.pdf
+
+# Optional text used when Claude drafts free-text answers (2-5 sentences about you).
+summary: >
+  Graduate CS student interested in software engineering and product.
+
+# Your own canned answers. Keys are regexes matched against the question text.
+custom_answers:
+  "why .*(us|company|here|interested)": ""
+  "tell us about (a|your) project": ""

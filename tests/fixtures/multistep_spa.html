@@ -1,0 +1,42 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Workday-style multi-step</title></head>
+<body>
+<div id="app"></div>
+<script>
+  // Mimics Workday / iCIMS: one form rendered in steps without a page navigation,
+  // plus a react-select style combobox and aria-labelled inputs.
+  const steps = [
+    `<h2>My Information</h2>
+     <div><div id="lbl-fn">Given Name(s)</div><input aria-labelledby="lbl-fn" data-automation-id="legalNameSection_firstName"></div>
+     <div><div id="lbl-ln">Family Name</div><input aria-labelledby="lbl-ln"></div>
+     <div><input aria-label="Email Address" type="text"></div>
+     <div><label id="ctry">Country</label>
+       <div class="select__control"><input role="combobox" aria-autocomplete="list" aria-labelledby="ctry" id="ctry-input">
+       <div class="select__single-value"></div></div>
+       <div id="menu"></div></div>
+     <button type="button" id="next">Next</button>`,
+    `<h2>Application Questions</h2>
+     <div role="radiogroup" aria-labelledby="q18"><span id="q18">Are you at least 18 years of age?</span>
+       <label><input type="radio" name="q18" value="y">Yes</label><label><input type="radio" name="q18" value="n">No</label></div>
+     <div><label for="start">When can you start?</label><input id="start" type="date"></div>
+     <button type="submit" id="submit" onclick="window.__submitted=true">Submit</button>`,
+  ];
+  let step = 0;
+  function render() {
+    document.getElementById("app").innerHTML = steps[step];
+    const next = document.getElementById("next");
+    if (next) next.onclick = () => { step = 1; render(); };
+    const cb = document.getElementById("ctry-input");
+    if (cb) cb.addEventListener("input", () => {
+      const menu = document.getElementById("menu");
+      const all = ["United Kingdom", "United States of America", "Uruguay"];
+      menu.innerHTML = all.filter(c => c.toLowerCase().includes(cb.value.toLowerCase().slice(0, 4)))
+        .map(c => `<div role="option">${c}</div>`).join("");
+      menu.querySelectorAll("[role=option]").forEach(o => o.onclick = () => {
+        document.querySelector(".select__single-value").textContent = o.textContent; cb.value = ""; menu.innerHTML = "";
+      });
+    });
+  }
+  render();
+</script>
+</body></html>
