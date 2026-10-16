@@ -4,14 +4,57 @@
 search:
   # Which kinds of roles to keep: swe, ml_data, pm, quant, hardware
   roles: [swe, ml_data, pm]
-  # intern, newgrad (unknown = the source didn't say; usually fine to keep)
-  levels: [intern, newgrad, unknown]
+  # Full-time only. Options: newgrad, unknown (a full-time role whose title doesn't say
+  # "new grad" - most entry-level postings), intern. Add intern here to include internships.
+  levels: [newgrad, unknown]
   # Only keep jobs posted within this many days (0 = no limit)
   max_age_days: 21
-  # Substring match against the job's locations (case-insensitive). Empty = anywhere.
+  # HARD filter: only keep jobs in these places (whole-word, case-insensitive). Empty = anywhere.
   # Jobs listing "Remote" always pass if include_remote is true.
-  locations: []          # e.g. ["CA", "San Francisco", "Seattle", "New York", "NYC"]
+  locations: []
   include_remote: true
+  # SOFT preference: jobs anywhere are kept, but these places rank higher in your queue.
+  preferred_locations:
+    # San Francisco / Bay Area
+    - San Francisco
+    - SF
+    - Bay Area
+    - South San Francisco
+    - Oakland
+    - Berkeley
+    - Emeryville
+    - San Mateo
+    - Foster City
+    - Burlingame
+    - Redwood City
+    - Menlo Park
+    - Palo Alto
+    - Mountain View
+    - Sunnyvale
+    - Santa Clara
+    - San Jose
+    - Cupertino
+    - Milpitas
+    - Fremont
+    - San Bruno
+    - Los Gatos
+    # New York
+    - New York
+    - NYC
+    - NY
+    - Brooklyn
+    - Manhattan
+    # Texas
+    - Texas
+    - TX
+    - Austin
+    - Dallas
+    - Houston
+    - San Antonio
+    - Plano
+    - Irving
+    - Fort Worth
+    - Richardson
   countries_exclude: ["Canada", "UK", "India", "Germany", "Singapore"]   # drop non-US lists' rows
   # Set true if you will need visa sponsorship now or later: drops jobs that say
   # "Does Not Offer Sponsorship" or "U.S. Citizenship is Required".
@@ -28,6 +71,7 @@ search:
 # Repo names roll over every season (e.g. Summer2027 -> Summer2028) - bump the year here.
 sources:
   - name: simplify-internships
+    enabled: false        # internships - turn on if you ever want them
     type: simplify_json
     level: intern
     url: https://raw.githubusercontent.com/SimplifyJobs/Summer2027-Internships/dev/.github/scripts/listings.json
@@ -50,10 +94,12 @@ sources:
     level: newgrad
     url: https://raw.githubusercontent.com/jobright-ai/2026-Product-Management-New-Grad/master/README.md
   - name: jobright-swe-intern
+    enabled: false        # internships - turn on if you ever want them
     type: markdown
     level: intern
     url: https://raw.githubusercontent.com/jobright-ai/2026-Software-Engineer-Internship/master/README.md
   - name: jobright-pm-intern
+    enabled: false        # internships - turn on if you ever want them
     type: markdown
     level: intern
     url: https://raw.githubusercontent.com/jobright-ai/2026-Product-Management-Internship/master/README.md

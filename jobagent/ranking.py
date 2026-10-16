@@ -1,10 +1,26 @@
 """Filter jobs down to the ones you'd actually apply to, then rank them."""
 from __future__ import annotations
 
+import re
 import time
+from functools import lru_cache
 
 from .classify import is_senior
 from .models import Job
+
+@lru_cache(maxsize=32)
+def _place_rx(places: tuple[str, ...]) -> re.Pattern | None:
+    """Whole-word match so 'TX' doesn't hit 'Netx' and 'SF' doesn't hit 'Transfer'."""
+    places = tuple(p.strip() for p in places if p and p.strip())
+    if not places:
+        return None
+    return re.compile(r"(?<![A-Za-z])(" + "|".join(re.escape(p) for p in places) + r")(?![A-Za-z])", re.I)
+
+
+def in_places(locations: list[str], places) -> bool:
+    rx = _place_rx(tuple(places or ()))
+    return bool(rx and rx.search(" | ".join(locations)))
+
 
 _NO_SPONSOR = ("does not offer sponsorship", "citizenship is required", "u.s. citizen")
 
@@ -35,10 +51,9 @@ def keep(job: Job, s: dict, now: float | None = None) -> tuple[bool, str]:
         parts = [p.strip() for p in locs.split("|")]
         if parts and all(any(c.lower() in p for c in s["countries_exclude"]) for p in parts):
             return False, "country"
-    wanted = [l.lower() for l in s.get("locations", []) if l]
-    if wanted and locs:
+    if s.get("locations") and locs:
         remote_ok = s.get("include_remote", True) and "remote" in locs
-        if not remote_ok and not any(w in locs for w in wanted):
+        if not remote_ok and not in_places(job.locations, s["locations"]):
             return False, "location"
     return True, ""
 
@@ -56,9 +71,9 @@ def score(job: Job, s: dict, now: float | None = None) -> float:
         pts += 30
     if "faang" in job.tags:
         pts += 10
-    wanted = [l.lower() for l in s.get("locations", []) if l]
-    locs = " ".join(job.locations).lower()
-    if wanted and any(w in locs for w in wanted):
+    if in_places(job.locations, s.get("preferred_locations")):
+        pts += 20                                   # your preferred cities rank first
+    elif in_places(job.locations, s.get("locations")):
         pts += 10
     if job.source in ("greenhouse", "lever", "ashby"):
         pts += 5                                    # straight from the company = newest

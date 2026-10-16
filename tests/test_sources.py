@@ -86,6 +86,19 @@ def test_filters():
     assert not keep(mk(title="Senior Software Engineer"), s)[0]
 
 
+def test_preferred_locations_rank_but_dont_filter():
+    from jobagent.ranking import in_places, score
+    s = {"roles": ["swe"], "levels": ["newgrad", "unknown"], "preferred_locations": ["San Francisco", "SF", "NYC", "TX", "Austin"]}
+    now = time.time()
+    mk = lambda locs, level="newgrad": Job(source="t", company="A", title="Software Engineer", url="u", category="swe",
+                                           level=level, date_posted=int(now), locations=locs)
+    assert keep(mk(["Chicago, IL"]), s)[0]                                 # anywhere is still fine
+    assert score(mk(["Austin, TX"]), s, now) > score(mk(["Chicago, IL"]), s, now)
+    assert in_places(["SF"], s["preferred_locations"]) and in_places(["New York, NY / NYC"], s["preferred_locations"])
+    assert not in_places(["Netx City"], ["TX"])                            # whole words only
+    assert not keep(mk(["SF"], level="intern"), s)[0]                       # full-time only
+
+
 def test_url_dedupe():
     assert normalize_url("https://Jobs.Lever.co/acme/1/?utm_source=simplify&ref=x") == "https://jobs.lever.co/acme/1"
 

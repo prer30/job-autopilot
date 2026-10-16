@@ -1,10 +1,10 @@
 # Job Autopilot 🤖
 
-Finds new **software engineering, ML/data, and product management** roles from the job lists students actually trust, opens each application in a real browser, **fills in every field it can from your profile, attaches the right resume — and then stops.** You review the form and click **Submit** yourself.
+Finds new **full-time** entry-level **software engineering, ML/data, and product management** roles from the job lists students actually trust, opens each application in a real browser, **fills in every field it can from your profile, attaches the right resume — and then stops.** You review the form and click **Submit** yourself.
 
 ```
 jobagent fetch     # pull ~10k listings from 9+ sources → keep the ones that match you
-jobagent list      # ranked queue: freshest + dream companies first
+jobagent list      # ranked queue: fresh postings, dream companies, and your preferred cities first
 jobagent apply     # opens the next 5, pre-filled. You review → Submit → next one
 ```
 
@@ -16,11 +16,11 @@ Auto-submitting bots spray bad applications (wrong resume, a hallucinated answer
 
 | Source | What | How it's read |
 |---|---|---|
-| [SimplifyJobs/Summer2027-Internships](https://github.com/SimplifyJobs/Summer2027-Internships) | Internships (SWE, PM, AI/ML, data…) | Structured `listings.json` |
+| [SimplifyJobs/Summer2027-Internships](https://github.com/SimplifyJobs/Summer2027-Internships) | Internships — *off by default* | Structured `listings.json` |
 | [SimplifyJobs/New-Grad-Positions](https://github.com/SimplifyJobs/New-Grad-Positions) | New grad roles | Structured `listings.json` |
-| [speedyapply/2027-SWE-College-Jobs](https://github.com/speedyapply/2027-SWE-College-Jobs) | SWE intern + new grad, with pay | README table |
-| [speedyapply/2027-AI-College-Jobs](https://github.com/speedyapply/2027-AI-College-Jobs) | AI/ML intern + new grad | README table |
-| [jobright-ai](https://github.com/jobright-ai) SWE / PM / Data repos | Daily new grad & intern lists | README table |
+| [speedyapply/2027-SWE-College-Jobs](https://github.com/speedyapply/2027-SWE-College-Jobs) | SWE new grad (intern rows filtered out), with pay | README table |
+| [speedyapply/2027-AI-College-Jobs](https://github.com/speedyapply/2027-AI-College-Jobs) | AI/ML new grad | README table |
+| [jobright-ai](https://github.com/jobright-ai) SWE / PM / Data repos | Daily new grad SWE / PM / data lists (intern repos off by default) | README table |
 | Greenhouse / Lever / Ashby boards | Your dream companies, polled directly | Public JSON APIs |
 
 All are in `config/settings.yaml` — add, remove, or bump the year when a new season's repo appears. Listings are de-duplicated across sources (tracking params stripped, same company + title merged).
@@ -38,13 +38,13 @@ jobagent init                    # creates config/profile.yaml + config/settings
 
 1. **Fill in `config/profile.yaml`** — name, contact links, school, work authorization, EEO preferences. It's git-ignored, so it never gets pushed.
 2. **Drop your resume PDF(s) into `resumes/`** — e.g. `resume_swe.pdf` and `resume_pm.pdf`. The agent picks the one matching each job's category.
-3. **Tune `config/settings.yaml`** — roles, levels, locations, sponsorship needs, dream companies, max posting age.
+3. **Tune `config/settings.yaml`** — roles, sponsorship needs, dream companies, max posting age. By default it's **full-time only**, jobs **anywhere** are kept, and **SF / Bay Area, New York, and Texas** rank first (`preferred_locations`). Want internships too? Add `intern` to `levels` and set `enabled: true` on the intern sources.
 
 ## Applying
 
 ```bash
 jobagent fetch
-jobagent apply -n 10 --role pm          # or --role swe / ml_data, --level intern / newgrad
+jobagent apply -n 10 --role pm          # or --role swe / ml_data
 jobagent apply 3f9a1c2                  # one specific job id from `jobagent list`
 ```
 
